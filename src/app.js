@@ -3,6 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 const express = require('express');
+const serverless = require("serverless-http");
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
@@ -21,7 +22,7 @@ const reviewRoutes = require('./routes/reviews');
 
 const MongoDBStore = require("connect-mongo")(session);
 
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/naija-camp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/naijaa-camp';
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
@@ -44,7 +45,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname,"public")));
 app.use(mongoSanitize({
     replaceWith: '_'
 }))
@@ -163,3 +164,5 @@ const port = process.env.PORT || 2400;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
 })
+
+module.exports.handler = serverless(app);
